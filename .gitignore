@@ -1,0 +1,7 @@
+.env
+.python-version
+__pycache__
+.pytest_cache
+.pyc
+.vscode
+.idea
