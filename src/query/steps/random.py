@@ -14,7 +14,7 @@ class RandomStep(BaseQueryStep):
     type: Literal["random"] = "random"
     new_column: str
 
-    def prepare(self, pq) -> QueryPlan:
+    def plan(self, pq) -> QueryPlan:
         match pq:
             case InMemoryQueryPlan() as pq:
                 pass

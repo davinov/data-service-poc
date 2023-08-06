@@ -11,13 +11,9 @@ class BaseSource(BaseModel, ABC):
     type: str
 
     @abstractmethod
-    def prepare(self) -> QueryPlan:
+    def plan(self) -> QueryPlan:
         """
-        Prepare the source to a format where steps can be added.
-        If data can't be further transformed in the source, the result would be
-        polars' LazyFrame.
-        If more transformations would be pushed in the source engine, the result
-        will be a query for this engine, to be completed.
+        Plan the extraction of data from the source.
         """
 
 
@@ -25,7 +21,7 @@ class FileSource(BaseSource):
     type: Literal["file"] = "file"
     file: FilePath
 
-    def prepare(self):
+    def plan(self):
         return InMemoryQueryPlan(executor=lambda: pl.scan_csv(self.file))
 
 
@@ -34,7 +30,7 @@ class DatabaseSource(BaseSource):
     connection_uri: str
     table: str
 
-    def prepare(self):
+    def plan(self):
         table = pypika.Table(self.table)
         return SQLQueryPlan(
             connection_uri=self.connection_uri,

@@ -1,3 +1,4 @@
+import logging
 import polars as pl
 from pydantic import BaseModel
 
@@ -9,11 +10,17 @@ class Query(BaseModel):
     source: QuerySource
     steps: list[QueryStep]
 
-    def prepare(self) -> QueryPlan:
-        pq = self.source.prepare()
+    def plan(self) -> QueryPlan:
+        logging.debug('Start query plan')
+        pq = self.source.plan()
         for step in self.steps:
-            pq = step.prepare(pq)
+            pq = step.plan(pq)
+        logging.debug('End query plan')
         return pq
 
+
     def execute(self) -> pl.DataFrame:  # TODO maybe return pyarrow Table instead
-        return self.prepare().execute()
+        logging.debug('Start query execution')
+        result = self.plan().execute()
+        logging.debug('End of query execution')
+        return result

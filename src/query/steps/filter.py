@@ -11,7 +11,7 @@ class FilterStep(BaseQueryStep):
     column: str
     value: str | int | float | bool | datetime | None
 
-    def prepare(self, pq) -> QueryPlan:
+    def plan(self, pq) -> QueryPlan:
         match pq:
             case SQLQueryPlan() as pq:
                 return SQLQueryPlan(

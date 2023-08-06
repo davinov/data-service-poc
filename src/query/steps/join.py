@@ -12,8 +12,8 @@ class JoinStep(BaseQueryStep):
     right_query: "Query"
     on: str
 
-    def prepare(self, pq) -> QueryPlan:
-        right_query_pq = self.right_query.prepare()
+    def plan(self, pq) -> QueryPlan:
+        right_query_pq = self.right_query.plan()
 
         # If both queries are SQL queries from the same DB,
         # then we can use a JOIN clause in the SQL query

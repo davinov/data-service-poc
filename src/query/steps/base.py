@@ -9,7 +9,7 @@ class BaseQueryStep(BaseModel, ABC):
     type: str
 
     @abstractmethod
-    def prepare(self, pq: QueryPlan) -> QueryPlan:
+    def plan(self, pq: QueryPlan) -> QueryPlan:
         """
-        Apply the current step to the prepared query
+        Adds the current step to a query plan
         """

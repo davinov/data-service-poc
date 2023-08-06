@@ -14,12 +14,12 @@ class BaseQueryPlan(ABC):
 
 class InMemoryQueryPlan(BaseQueryPlan):
     """
-    Represents operations made on a Lazy DataFrame with polars
+    Represents operations made on a Lazy DataFrame with polars.
     As we don't want to execute them right away, but just to plan them, we
-    wrap them in a function to be executed later
+    wrap them in a function to be executed later.
 
     Working with LazyFrame, instead of DataFrame, allows polars to make
-    optimizations.
+    optimizations just before executing the whole pipeline.
     """
 
     def __init__(self, executor: Callable[[], pl.LazyFrame]):
