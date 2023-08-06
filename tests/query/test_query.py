@@ -69,6 +69,27 @@ def test_join_query_from_db_with_other_query_from_same_db(postgres_db):
     assert table.shape == (3, 3)
 
 
+def test_join_query_from_db_with_other_query_different_db(postgres_db):
+    # Simulate that we connect to two different DBs
+    alternative_postgres_db = postgres_db.replace("0.0.0.0", "localhost")
+
+    table = Query(
+        source=DatabaseSource(connection_uri=postgres_db, table="sample_data"),
+        steps=[
+            JoinStep(
+                right_query=Query(
+                    source=DatabaseSource(
+                        connection_uri=alternative_postgres_db, table="users"
+                    ),
+                    steps=[],
+                ),
+                on="user_id",
+            )
+        ],
+    ).execute()
+    assert table.shape == (3, 3)
+
+
 def test_join_query_from_db_with_file(postgres_db):
     table = Query(
         source=DatabaseSource(connection_uri=postgres_db, table="sample_data"),

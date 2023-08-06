@@ -1,4 +1,4 @@
-from ..query_plan import SQLQueryPlan
+from ..plan.sql import SQLQueryPlan
 from .base import BaseSource
 
 

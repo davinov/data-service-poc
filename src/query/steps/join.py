@@ -1,7 +1,11 @@
 from typing import TYPE_CHECKING, Literal
 
+from ..plan.in_memory import InMemoryQueryPlan
+
+from ..plan import QueryPlan
+
 from .base import BaseQueryStep
-from ..query_plan import QueryPlan, SQLQueryPlan, InMemoryQueryPlan
+from ..plan.sql import SQLQueryPlan
 
 if TYPE_CHECKING:
     from ..query import Query
@@ -28,7 +32,6 @@ class JoinStep(BaseQueryStep):
                 query=pq.query.join(right_query_pq.query.select("*")).on_field(self.on),
             )
 
-        
         if not isinstance(right_query_pq, InMemoryQueryPlan):
             right_query_pq = right_query_pq.to_memory()
 

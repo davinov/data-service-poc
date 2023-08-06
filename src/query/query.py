@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from .sources import QuerySource
 
 from .performance_utils import Timer
-from .sources.base import QueryPlan
+from .plan import QueryPlan
 from .steps import QueryStep
 
 

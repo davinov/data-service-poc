@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from pydantic import BaseModel
 
-from ..query_plan import QueryPlan
+from ..plan import QueryPlan
 
 
 class BaseSource(BaseModel, ABC):

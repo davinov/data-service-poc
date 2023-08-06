@@ -2,8 +2,12 @@ from datetime import datetime
 from typing import Literal
 import polars as pl
 
+from ..plan.in_memory import InMemoryQueryPlan
+
+from ..plan import QueryPlan
+
 from .base import BaseQueryStep
-from ..query_plan import QueryPlan, SQLQueryPlan, InMemoryQueryPlan
+from ..plan.sql import SQLQueryPlan
 
 
 class FilterStep(BaseQueryStep):
