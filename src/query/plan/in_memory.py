@@ -1,3 +1,6 @@
+import logging
+
+from ..performance_utils import Timer
 from .base import BaseQueryPlan
 
 
@@ -21,4 +24,10 @@ class InMemoryQueryPlan(BaseQueryPlan):
         self.executor = executor
 
     def execute(self) -> pl.DataFrame:
-        return self.executor().collect()
+        df, profile_info = self.executor().profile()
+        logging.debug(
+            f'''
+                In memory processing finished
+                    - profile: {profile_info}
+            ''')
+        return df

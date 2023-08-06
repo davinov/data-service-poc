@@ -29,9 +29,16 @@ class SQLQueryPlan(BaseQueryPlan):
         sql_query = self.query.select("*").get_sql()
         timer = Timer()
         with timer:
-            logging.debug(f"Sending SQL query: {sql_query}")
+            logging.debug(
+                f"""
+                    Sending SQL query:
+                        {sql_query}
+                """)
             df = pl.read_database(sql_query, self.connection_uri)
-        logging.debug(f"SQL query duration: {timer}")
+        logging.debug(
+                f"""
+                    SQL query duration: {timer}
+                """)
         return df
 
     def to_memory(self) -> InMemoryQueryPlan:

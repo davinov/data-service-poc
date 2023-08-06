@@ -21,19 +21,34 @@ class Query(BaseModel):
         return pq
 
     def execute(self) -> pl.DataFrame:  # TODO maybe return pyarrow Table instead
-        logging.debug(f"Start query planning")
+        logging.debug(
+            f"""
+                Start query planning
+            """
+        )
         timer_plan = Timer()
         with timer_plan:
             plan = self.plan()
-        logging.debug(f"End of query planning - duration: {timer_plan}")
+        logging.debug(
+            f"""
+                End of query planning
+                    - duration: {timer_plan}
+            """
+        )
 
-        logging.debug(f"Start query execution")
+        logging.debug(
+            f"""
+                Start query execution
+            """
+        )
         timer_exec = Timer()
         with timer_exec:
             df = plan.execute()
         logging.debug(
-            f"""End query execution
+            f"""
+                End query execution
                     - duration: {timer_exec}
                     - memory: {df.estimated_size('mb'):.0f} MB
-        """)
+            """
+        )
         return df
