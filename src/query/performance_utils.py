@@ -10,4 +10,4 @@ class Timer:
         self.interval = self.end - self.begin
 
     def __str__(self):
-        return f"{self.interval * 1000:.0f}ms"
+        return f"{self.interval * 1000:.0f} ms"

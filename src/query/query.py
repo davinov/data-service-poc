@@ -1,11 +1,12 @@
 import logging
 import polars as pl
 from pydantic import BaseModel
+import resource
 
 from .sources import QuerySource
 
 from .performance_utils import Timer
-from .plan import QueryPlan
+from .sources.base import QueryPlan
 from .steps import QueryStep
 
 
@@ -29,6 +30,10 @@ class Query(BaseModel):
         logging.debug(f"Start query execution")
         timer_exec = Timer()
         with timer_exec:
-            result = plan.execute()
-        logging.debug(f"End query execution - duration: {timer_exec}")
-        return result
+            df = plan.execute()
+        logging.debug(
+            f"""End query execution
+                    - duration: {timer_exec}
+                    - memory: {df.estimated_size('mb'):.0f} MB
+        """)
+        return df
