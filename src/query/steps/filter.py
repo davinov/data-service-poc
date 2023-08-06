@@ -21,7 +21,9 @@ class FilterStep(BaseQueryStep):
                 )
             case InMemoryQueryPlan() as pq:
                 return InMemoryQueryPlan(
-                    lazy_frame=pq.lazy_frame.filter(pl.col(self.column) == self.value)
+                    executor=lambda: pq.executor().filter(
+                        pl.col(self.column) == self.value
+                    )
                 )
             case _:
                 raise TypeError

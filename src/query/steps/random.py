@@ -22,16 +22,18 @@ class RandomStep(BaseQueryStep):
                 # This step is not supported elsewhere than in memory
                 pq = pq.to_memory()
 
-        return InMemoryQueryPlan(
-            lazy_frame=pq.lazy_frame.map(
+        def execute_random_step():
+            lazy_frame = pq.executor()
+            return lazy_frame.map(
                 function=lambda df: df.with_columns(
                     pl.Series(
                         name=self.new_column, values=np.random.uniform(0, 1, len(df))
                     )
                 ),
                 schema={
-                    **pq.lazy_frame.schema,
+                    **lazy_frame.schema,
                     self.new_column: pl.Float64,
                 },
-            ),
-        )
+            )
+
+        return InMemoryQueryPlan(executor=execute_random_step)

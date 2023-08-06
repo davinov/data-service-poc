@@ -36,8 +36,8 @@ class JoinStep(BaseQueryStep):
             pq = pq.to_memory()
 
         return InMemoryQueryPlan(
-            lazy_frame=pq.lazy_frame.join(
-                other=right_query_pq.lazy_frame,
+            executor=lambda: pq.executor().join(
+                other=right_query_pq.executor(),
                 on=self.on,
             )
         )

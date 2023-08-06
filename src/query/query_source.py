@@ -26,7 +26,7 @@ class FileSource(BaseSource):
     file: FilePath
 
     def prepare(self):
-        return InMemoryQueryPlan(lazy_frame=pl.scan_csv(self.file))
+        return InMemoryQueryPlan(executor=lambda: pl.scan_csv(self.file))
 
 
 class DatabaseSource(BaseSource):

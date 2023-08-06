@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Union
+from typing import Callable, Union
 import polars as pl
 import pypika.queries
 
@@ -15,13 +15,18 @@ class BaseQueryPlan(ABC):
 class InMemoryQueryPlan(BaseQueryPlan):
     """
     Represents operations made on a Lazy DataFrame with polars
+    As we don't want to execute them right away, but just to plan them, we
+    wrap them in a function to be executed later
+
+    Working with LazyFrame, instead of DataFrame, allows polars to make
+    optimizations.
     """
 
-    def __init__(self, lazy_frame: pl.LazyFrame):
-        self.lazy_frame = lazy_frame
+    def __init__(self, executor: Callable[[], pl.LazyFrame]):
+        self.executor = executor
 
     def execute(self) -> pl.DataFrame:
-        return self.lazy_frame.collect()
+        return self.executor().collect()
 
 
 class SQLQueryPlan(BaseQueryPlan):
@@ -40,22 +45,13 @@ class SQLQueryPlan(BaseQueryPlan):
         self.table = table
 
     def execute(self) -> pl.DataFrame:
-        print("SQL QUERY:", self.query.select("*").get_sql())
         return pl.read_database(self.query.select("*").get_sql(), self.connection_uri)
 
     def to_memory(self) -> InMemoryQueryPlan:
         """
         Utility to switch towards in-memory processing when no other method is available
         """
-        return InMemoryQueryPlan(
-            lazy_frame=self.execute().lazy()
-            # FIXME how can we delay execution?
-            # Idea: see if we wan implement a Scanner for read_database
-            # (We may just need the schema)
-            # See this issue https://github.com/pola-rs/polars/issues/4351,
-            # the PythonScanExec https://github.com/pola-rs/polars/blob/1e3f703698099faff5cddd2d96e4cbd52944bb93/polars/polars-lazy/src/physical_plan/executors/python_scan.rs#L19
-            # and its counterpart in Python https://github.com/pola-rs/polars/blob/main/py-polars/polars/io/ipc/anonymous_scan.py#L24
-        )
+        return InMemoryQueryPlan(executor=lambda: self.execute().lazy())
 
 
 QueryPlan = Union[
