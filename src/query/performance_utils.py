@@ -8,6 +8,6 @@ class Timer:
     def __exit__(self, type, value, traceback):
         self.end = time.perf_counter()
         self.interval = self.end - self.begin
-    
+
     def __str__(self):
-        return f'{self.interval * 1000:.0f}ms'
+        return f"{self.interval * 1000:.0f}ms"

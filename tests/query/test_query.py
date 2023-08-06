@@ -1,8 +1,7 @@
 from pathlib import Path
-import polars as pl
 
 from query.query import Query
-from query.query_source import DatabaseSource, FileSource
+from query.sources import DatabaseSource, FileSource
 from query.steps import FilterStep, JoinStep, RandomStep
 
 from tests.fixtures.postgres import postgres_db

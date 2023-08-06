@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from pydantic import BaseModel
 import polars as pl
 
-from ..query_source import QueryPlan
+from ..sources.base import QueryPlan
 
 
 class BaseQueryStep(BaseModel, ABC):
