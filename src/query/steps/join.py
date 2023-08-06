@@ -28,13 +28,15 @@ class JoinStep(BaseQueryStep):
                 query=pq.query.join(right_query_pq.query.select("*")).on_field(self.on),
             )
 
-        # For now, only support in memory
+        
         if not isinstance(right_query_pq, InMemoryQueryPlan):
             right_query_pq = right_query_pq.to_memory()
 
         if not isinstance(pq, InMemoryQueryPlan):
             pq = pq.to_memory()
 
+        # To improve performance, both executors should be async and executed
+        # concurrently (like asyncio.gather)
         return InMemoryQueryPlan(
             executor=lambda: pq.executor().join(
                 other=right_query_pq.executor(),

@@ -1,7 +1,10 @@
 from abc import ABC, abstractmethod
+import logging
 from typing import Callable, Union
 import polars as pl
 import pypika.queries
+
+from .performance_utils import Timer
 
 
 class BaseQueryPlan(ABC):
@@ -45,7 +48,13 @@ class SQLQueryPlan(BaseQueryPlan):
         self.table = table
 
     def execute(self) -> pl.DataFrame:
-        return pl.read_database(self.query.select("*").get_sql(), self.connection_uri)
+        sql_query = self.query.select("*").get_sql()
+        timer = Timer()
+        with timer:
+            logging.debug(f'Sending SQL query: {sql_query}')
+            df = pl.read_database(sql_query, self.connection_uri)
+        logging.debug(f'SQL query duration: {timer}')
+        return df
 
     def to_memory(self) -> InMemoryQueryPlan:
         """
