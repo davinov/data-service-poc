@@ -48,7 +48,7 @@ class Query(BaseModel):
             f"""
                 End query execution
                     - duration: {timer_exec}
-                    - memory: {df.estimated_size('mb'):.0f} MB
+                    - dataframe memory: {df.estimated_size('mb'):.0f} MB
             """
         )
         return df

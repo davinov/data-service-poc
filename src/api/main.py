@@ -12,4 +12,4 @@ def read_root():
 
 @api.post("/query/execute")
 def execute_query(query: Query):
-    return query.execute().to_dicts()
+    return query.execute().to_dicts()  # TODO send arrow format instead
