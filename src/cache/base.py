@@ -25,9 +25,9 @@ class BaseCache:
         """To return the memory size of a value"""
         return getsizeof(value)
 
-    def _build_key(self, func: Callable, *args: Any, **kwargs: Any) -> str:
+    def _build_key(self, *args: Any, **kwargs: Any) -> str:
         """The key builder for our cache system"""
-        return f"{func.__name__}-{args}-{kwargs}"
+        return f"{args}-{kwargs}"
 
     def _build_value(self, value: Any) -> bytes:
         """
