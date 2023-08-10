@@ -1,10 +1,10 @@
-from ..plan.in_memory import InMemoryQueryPlan
-from .base import BaseSource
-
 import polars as pl
 from pydantic import FilePath
 
 from typing import Literal
+from query.plan.in_memory import InMemoryQueryPlan
+
+from query.sources.base import BaseSource
 
 
 class FileSource(BaseSource):

@@ -1,8 +1,7 @@
-from .in_memory import InMemoryQueryPlan
-from .sql import SQLQueryPlan
-
-
 from typing import Union
+from query.plan.in_memory import InMemoryQueryPlan
+
+from query.plan.sql import SQLQueryPlan
 
 
 QueryPlan = Union[

@@ -1,12 +1,12 @@
 import logging
 
-from .base import BaseQueryPlan
-
 
 import polars as pl
 
 
 from typing import Callable
+
+from query.plan.base import BaseQueryPlan
 
 
 class InMemoryQueryPlan(BaseQueryPlan):

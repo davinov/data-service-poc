@@ -1,12 +1,11 @@
 import logging
 import polars as pl
 from pydantic import BaseModel
+from query.performance_utils import Timer
+from query.plan import QueryPlan
 
-from .sources import QuerySource
-
-from .performance_utils import Timer
-from .sources.base import QueryPlan
-from .steps import QueryStep
+from query.sources import QuerySource
+from query.steps import QueryStep
 
 
 class Query(BaseModel):

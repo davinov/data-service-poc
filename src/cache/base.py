@@ -55,10 +55,16 @@ class BaseCache:
         ...
 
     def get_or_set(
-        self, key: str, default: Any | None = None,
-        custom_condition: bool = True, call_back: Callable=lambda x: x, *args: Any
+        self,
+        key: str,
+        default: Any | None = None,
+        custom_condition: bool = True,
+        call_back: Callable = lambda x: x,
+        *args: Any,
     ) -> Any:
-        """Get a value from the cache engine or set it and just return the given value"""
+        """
+        Get a value from the cache engine or set it and just return the given value
+        """
         if given_value := self.get(key, default, custom_condition) is None:
             # we proceed with the operation if the value is not in the cache db
             value = call_back(*args)
@@ -67,7 +73,6 @@ class BaseCache:
             return value
 
         return given_value
-
 
     def pop(self, key: str, custom_condition: bool = True) -> None:
         """To pop something based on condition inside the cache"""
