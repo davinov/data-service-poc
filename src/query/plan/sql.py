@@ -39,6 +39,7 @@ class SQLQueryPlan(BaseQueryPlan):
                         {sql_query}
                 """
             )
+            # example of usage
             if _SETTINGS.USE_CACHE:
                 df = _SETTINGS.CACHE.get_or_set(
                     key=sql_query,

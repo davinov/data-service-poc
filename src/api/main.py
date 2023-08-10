@@ -1,6 +1,7 @@
-from query import Query
 
 from fastapi import FastAPI
+
+from query.query import Query
 
 api = FastAPI()
 
