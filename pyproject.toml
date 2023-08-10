@@ -38,6 +38,7 @@ build-backend = "poetry.core.masonry.api"
 pythonpath = "src"
 testpaths = "tests/*"
 asyncio_mode = "auto"
+addopts = "-v --doctest-modules --doctest-glob=*.md --ignore=alembic"
 
 [tool.ruff.pep8-naming]
 # Allow Pydantic's `@validator` decorator to trigger class method treatment.

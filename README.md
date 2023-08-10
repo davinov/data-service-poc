@@ -9,7 +9,7 @@ Proof of concept for a query execution service which could:
 - [ ] track time and resources used by query
 - [ ] handle many concurrent clients
 - [ ] limit memory usage per client
-- [ ] save queries to a transient cache
+- [x] save queries to a transient cache
 - [ ] execute data processing jobs and stream the result to disk
 
 ## Setup

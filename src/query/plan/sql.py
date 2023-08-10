@@ -1,3 +1,5 @@
+from cache.in_memory import InMemoryCache
+from config import get_settings
 from ..performance_utils import Timer
 from .in_memory import InMemoryQueryPlan
 from .base import BaseQueryPlan
@@ -9,6 +11,7 @@ import pypika.queries
 
 import logging
 
+_SETTINGS = get_settings()
 
 class SQLQueryPlan(BaseQueryPlan):
     """
@@ -35,7 +38,16 @@ class SQLQueryPlan(BaseQueryPlan):
                         {sql_query}
                 """
             )
-            df = pl.read_database(sql_query, self.connection_uri)
+            if _SETTINGS.USE_CACHE:
+                df = _SETTINGS.CACHE.get_or_set(
+                    key=sql_query,
+                    call_back=pl.read_database,
+                    *sql_query,
+                    *self.connection_uri
+                )
+            else:
+                df = pl.read_database(sql_query, self.connection_uri)
+
         logging.debug(
             f"""
                     SQL query duration: {timer}
