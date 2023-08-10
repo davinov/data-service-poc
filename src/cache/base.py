@@ -7,19 +7,21 @@ import time
 
 class BaseCache:
     def __init__(self) -> None:
-        ...
+        # these specific elements can be change subClasses
+        self.dumper = pickle.dumps
+        self.loader = pickle.loads
 
     def _log_cache_failed(self, key: str, logger: Any) -> None:
         """Just some logging"""
-        logger.debug(">> cache failed on custom_condition")
+        logger.debug(f">> cache failed on custom_condition for {key=}")
 
     def _log_cache_hit(self, key: str, logger: Any) -> None:
         """Just some logging"""
-        logger.debug(f">> cache hit for key={key}")
+        logger.debug(f">> cache hit for {key=}")
 
     def _log_cache_missed(self, key: str, logger: Any) -> None:
         """Just some logging"""
-        logger.debug(f">> cache missed for key={key}")
+        logger.debug(f">> cache missed for {key=}")
 
     def _size_of(self, value: Any) -> int:
         """To return the memory size of a value"""
@@ -34,13 +36,16 @@ class BaseCache:
         We need to have an uniform way to build the value and how it will be stored
         as bytes for perfs requirements
         """
-        return pickle.dumps(
+        return self.dumper(
             {
                 "value": value,
                 "at": time.time(),
                 "size_of": self._size_of(value),
             }
         )
+
+    def _load_value(self, value: Any) -> Any:
+        return self.loader(value)
 
     def get(
         self, key: str, default: Any | None = None, custom_condition: bool = True

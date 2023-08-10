@@ -1,4 +1,3 @@
-
 from fastapi import FastAPI
 
 from query.query import Query

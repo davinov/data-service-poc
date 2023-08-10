@@ -3,7 +3,6 @@ from typing import Any
 from src.cache.exceptions import MaxMemorySizeCacheException
 from src.cache.base import BaseCache
 import time
-import pickle
 
 _LOGGER = logging.getLogger()
 _MAX_MEMORY_SIZE_PER_VALUE = 300
@@ -22,13 +21,13 @@ class InMemoryCache(BaseCache):
             self._log_cache_failed(key, _LOGGER)
             return None
 
-        if (saved_value := self.cache.get(key, default)) is not None:
-            saved_value = pickle.loads(saved_value)
+        if (saved_cache_value := self.cache.get(key, default)) is not None:
+            saved_value = self._load_value(saved_cache_value)
             if time.time() - saved_value["at"] < _TTL:
                 self._log_cache_hit(key, _LOGGER)
                 return saved_value
             else:
-                self.cache.pop(key)
+                self.pop(key)
 
         self._log_cache_missed(key, _LOGGER)
         return None
