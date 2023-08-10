@@ -4,8 +4,6 @@ from query.query import Query
 from query.sources import DatabaseSource, FileSource
 from query.steps import FilterStep, JoinStep, RandomStep
 
-from tests.fixtures.postgres import postgres_db
-
 
 def test_query_from_file():
     table = Query(

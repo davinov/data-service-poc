@@ -33,12 +33,14 @@ class SQLQueryPlan(BaseQueryPlan):
                 f"""
                     Sending SQL query:
                         {sql_query}
-                """)
+                """
+            )
             df = pl.read_database(sql_query, self.connection_uri)
         logging.debug(
-                f"""
+            f"""
                     SQL query duration: {timer}
-                """)
+                """
+        )
         return df
 
     def to_memory(self) -> InMemoryQueryPlan:
