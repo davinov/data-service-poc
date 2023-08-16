@@ -1,13 +1,12 @@
 import logging
 
-from ..performance_utils import Timer
-from .base import BaseQueryPlan
-
 
 import polars as pl
 
 
 from typing import Callable
+
+from query.plan.base import BaseQueryPlan
 
 
 class InMemoryQueryPlan(BaseQueryPlan):
@@ -26,8 +25,9 @@ class InMemoryQueryPlan(BaseQueryPlan):
     def execute(self) -> pl.DataFrame:
         df, profile_info = self.executor().profile()
         logging.debug(
-            f'''
+            f"""
                 In memory processing finished
                     - profile: {profile_info}
-            ''')
+            """
+        )
         return df

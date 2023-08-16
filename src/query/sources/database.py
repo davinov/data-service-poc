@@ -1,11 +1,10 @@
-from ..plan.sql import SQLQueryPlan
-from .base import BaseSource
-
-
 import pypika
 
 
 from typing import Literal
+from query.plan.sql import SQLQueryPlan
+
+from query.sources.base import BaseSource
 
 
 class DatabaseSource(BaseSource):

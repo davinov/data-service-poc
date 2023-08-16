@@ -1,11 +1,10 @@
 from typing import Literal
 import numpy as np
 import polars as pl
+from query.plan import QueryPlan
+from query.plan.in_memory import InMemoryQueryPlan
 
-from ..plan import QueryPlan
-
-from .base import BaseQueryStep
-from ..plan.in_memory import InMemoryQueryPlan
+from query.steps.base import BaseQueryStep
 
 
 class RandomStep(BaseQueryStep):

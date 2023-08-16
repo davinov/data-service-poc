@@ -1,14 +1,13 @@
 from typing import TYPE_CHECKING, Literal
+from query.plan import QueryPlan
+from query.plan.in_memory import InMemoryQueryPlan
+from query.plan.sql import SQLQueryPlan
 
-from ..plan.in_memory import InMemoryQueryPlan
+from query.steps.base import BaseQueryStep
 
-from ..plan import QueryPlan
-
-from .base import BaseQueryStep
-from ..plan.sql import SQLQueryPlan
 
 if TYPE_CHECKING:
-    from ..query import Query
+    from query.query import Query
 
 
 class JoinStep(BaseQueryStep):

@@ -1,13 +1,11 @@
 import logging
 import polars as pl
 from pydantic import BaseModel
-import resource
+from query.performance_utils import Timer
+from query.plan import QueryPlan
 
-from .sources import QuerySource
-
-from .performance_utils import Timer
-from .sources.base import QueryPlan
-from .steps import QueryStep
+from query.sources import QuerySource
+from query.steps import QueryStep
 
 
 class Query(BaseModel):
@@ -22,7 +20,7 @@ class Query(BaseModel):
 
     def execute(self) -> pl.DataFrame:  # TODO maybe return pyarrow Table instead
         logging.debug(
-            f"""
+            """
                 Start query planning
             """
         )
@@ -37,7 +35,7 @@ class Query(BaseModel):
         )
 
         logging.debug(
-            f"""
+            """
                 Start query execution
             """
         )

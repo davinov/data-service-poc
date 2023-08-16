@@ -1,6 +1,4 @@
-from ..performance_utils import Timer
-from .in_memory import InMemoryQueryPlan
-from .base import BaseQueryPlan
+from config import get_settings
 
 
 import polars as pl
@@ -8,6 +6,12 @@ import pypika.queries
 
 
 import logging
+from query.performance_utils import Timer
+
+from query.plan.base import BaseQueryPlan
+from query.plan.in_memory import InMemoryQueryPlan
+
+_SETTINGS = get_settings()
 
 
 class SQLQueryPlan(BaseQueryPlan):
@@ -33,12 +37,24 @@ class SQLQueryPlan(BaseQueryPlan):
                 f"""
                     Sending SQL query:
                         {sql_query}
-                """)
-            df = pl.read_database(sql_query, self.connection_uri)
+                """
+            )
+            # example of usage
+            if _SETTINGS.USE_CACHE:
+                df = _SETTINGS.CACHE.get_or_set(
+                    key=sql_query,
+                    call_back=pl.read_database,
+                    *sql_query,
+                    *self.connection_uri,
+                )
+            else:
+                df = pl.read_database(sql_query, self.connection_uri)
+
         logging.debug(
-                f"""
+            f"""
                     SQL query duration: {timer}
-                """)
+                """
+        )
         return df
 
     def to_memory(self) -> InMemoryQueryPlan:
