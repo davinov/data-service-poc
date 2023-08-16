@@ -1,13 +1,21 @@
 import time
+from typing import Any
 import pytest
 from src.cache.exceptions import MaxMemorySizeCacheException
 from src.cache.file_cache import FileBaseCache
-import pickle
-import uuid
+
 
 class MockFileBaseCache(FileBaseCache):
     def __init__(self):
         super().__init__(cache_dir="test_cache")
+
+    @property
+    def dumper(value: Any):
+        pass
+
+    @property
+    def loader(value: Any):
+        pass
 
     def _build_value(self, value):
         return {"value": value, "at": time.time()}
@@ -22,7 +30,7 @@ def test_set_and_get():
     cache = MockFileBaseCache()
     cache.set("key2", "value")
     cached_value = cache.get("key2")
-    __import__('ipdb').set_trace()
+    __import__("ipdb").set_trace()
     assert cached_value["value"] == "value"
 
 

@@ -1,15 +1,26 @@
+from abc import ABC, abstractmethod, abstractproperty
 from functools import wraps
+from hashlib import md5
 from typing import Any, Callable
 from sys import getsizeof
 import pickle
 import time
 
 
-class BaseCache:
-    def __init__(self) -> None:
-        # these specific elements can be change subClasses
-        self.dumper = pickle.dumps
-        self.loader = pickle.loads
+class BaseCache(ABC):
+    """
+    the dumper and the loader
+    defined how the subclass implement the way
+    the data is dumps/load and can be updated
+    """
+
+    @abstractproperty
+    def dumper(something: Any):
+        return pickle.dumps
+
+    @abstractproperty
+    def loader(something: Any):
+        return pickle.loads
 
     def _log_cache_failed(self, key: str, logger: Any) -> None:
         """Just some logging"""
@@ -29,7 +40,7 @@ class BaseCache:
 
     def _build_key(self, *args: Any, **kwargs: Any) -> str:
         """The key builder for our cache system"""
-        return f"{args}-{kwargs}"
+        return md5(f"{args}-{kwargs}".encode("utf-8")).hexdigest()
 
     def _build_value(self, value: Any) -> bytes:
         """
@@ -79,11 +90,17 @@ class BaseCache:
 
         return given_value
 
+    @abstractmethod
     def pop(self, key: str, custom_condition: bool = True) -> None:
         """To pop something based on condition inside the cache"""
         ...
 
 
+# df = use_cache(
+#   cache_type='sql_query',
+#   cache_key=[sql_query, self.connection_uri],
+#   method=lambda: pl.read_database(sql_query, self.connection_uri)
+# )
 def cache_dec(cache_engine: BaseCache):
     def decorator(func: Callable) -> Any:
         @wraps(func)

@@ -1,4 +1,5 @@
 import logging
+import pickle
 from typing import Any
 from src.cache.exceptions import MaxMemorySizeCacheException
 from src.cache.base import BaseCache
@@ -13,6 +14,14 @@ class InMemoryCache(BaseCache):
     def __init__(self, cache: dict[str, Any] = {}) -> None:
         # We can set a cache from an existing dict
         self.cache: dict[str, Any] = cache
+
+    @property
+    def dumper(value: Any):
+        return pickle.dumps
+
+    @property
+    def loader(value: Any):
+        return pickle.loads
 
     def get(
         self, key: str, default: Any | None = None, custom_condition: bool = True

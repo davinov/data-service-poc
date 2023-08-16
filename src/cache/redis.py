@@ -1,6 +1,7 @@
 import logging
 from typing import Any
 import redis
+import pickle
 from src.cache.exceptions import MaxMemorySizeCacheException
 from src.cache.base import BaseCache
 
@@ -13,6 +14,14 @@ _TTL = 30
 class RedisCache(BaseCache):
     def __init__(self, host: str = "localhost", port: int = 6379, db: int = 0) -> None:
         self.redis_client = redis.StrictRedis(host=host, port=port, db=db)
+
+    @property
+    def dumper(value: Any):
+        return pickle.dumps
+
+    @property
+    def loader(value: Any):
+        return pickle.loads
 
     def get(self, key: str, custom_condition: bool = True) -> Any:
         if not custom_condition:

@@ -1,10 +1,8 @@
 import os
-import hashlib
 import polars as pl
 from typing import Any
 import logging
 from cache.base import BaseCache
-import time
 
 from cache.exceptions import MaxMemorySizeCacheException
 
@@ -18,11 +16,11 @@ class FileBaseCache(BaseCache):
         self.cache_dir = cache_dir
         os.makedirs(self.cache_dir, exist_ok=True)
 
-    def _build_key(self, key: str) -> str:
-        return hashlib.md5(key.encode("utf-8")).hexdigest()
-
     def _get_cache_filename(self, key: str) -> str:
         return os.path.join(self.cache_dir, f"{self._build_key(key)}.parquet")
+
+    def _build_value(self, value: Any) -> bytes:
+        return value
 
     def get(
         self, key: str, default: Any | None = None, custom_condition: bool = True
@@ -33,7 +31,7 @@ class FileBaseCache(BaseCache):
 
         cache_filename = self._get_cache_filename(key)
         if os.path.exists(cache_filename):
-            saved_value = pl.read_parquet( cache_filename).select(0)
+            saved_value = pl.read_parquet(cache_filename).select(0)
             self._log_cache_hit(key, _LOGGER)
             return saved_value
         else:
